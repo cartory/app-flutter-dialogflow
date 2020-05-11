@@ -19,13 +19,6 @@ class DialogProvider {
   final _dialogController =
       StreamController<GoogleCloudDialogflowV2QueryResult>.broadcast();
 
-  static final _query = {"text": "Ey!!", "languageCode": "ES"};
-  final _json = {
-    "queryInput": {
-      "text": _query,
-    }
-  };
-
   Stream<GoogleCloudDialogflowV2QueryResult> get dialogStream =>
       _dialogController.stream;
 
@@ -45,9 +38,12 @@ class DialogProvider {
   }
 
   makeQuery(String query) {
-    // https://dialogflow.googleapis.com/v2/projects/${authGoogle.getProjectId}/agent/sessions/${authGoogle.getSessionId}:detectIntent
-    _query["text"] = query;
-    var req = GoogleCloudDialogflowV2DetectIntentRequest.fromJson(_json);
+    var req = GoogleCloudDialogflowV2DetectIntentRequest.fromJson({
+      "queryInput": {
+        "text": {"text": query, "languageCode": "ES"}
+      }
+    });
+
     _api.projects.agent.sessions
         .detectIntent(req, "projects/$_projectID/agent/sessions/$_sessionID")
         .then((res) => _processResult(res.queryResult))

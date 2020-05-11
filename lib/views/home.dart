@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:app_dialog/views/product/produc_list.dart';
 import 'package:app_dialog/providers/speech_provider.dart';
 import 'package:app_dialog/providers/dialog_provider.dart';
-import 'package:app_dialog/views/product/product_list_query.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -32,24 +31,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     VoiceReader.instance.speak('Bienvenido');
-    DialogProvider.instance.dialogStream.listen((res) {
-      setState(() {
-        if (res.action == 'promo') {
-          _selectedIndex = 2;
-        }
-        if (res.action == 'list'){
-          _selectedIndex = 0;
-        }
-      });
-    });
-    SpeechRecognizer.instance.dataStream.listen((data) {
-      if (!data.status) {
-        DialogProvider.instance.makeQuery(data.text);
-        data.status = true;
-        SpeechRecognizer.instance.dataSink(data);
-        scaffoldKey.currentState.removeCurrentSnackBar();
-      }
-    });
+    this.addListeners();
   }
 
   @override
@@ -106,6 +88,27 @@ class _HomeState extends State<Home> {
   _onItemTapped(int index) {
     if (index == 1) return;
     setState(() => _selectedIndex = index);
+  }
+
+  void addListeners() {
+    DialogProvider.instance.dialogStream.listen((res) {
+      setState(() {
+        if (res.action == 'promo') {
+          _selectedIndex = 2;
+        }
+        if (res.action == 'list') {
+          _selectedIndex = 0;
+        }
+      });
+    });
+    SpeechRecognizer.instance.dataStream.listen((data) {
+      if (!data.status) {
+        DialogProvider.instance.makeQuery(data.text);
+        data.status = true;
+        SpeechRecognizer.instance.dataSink(data);
+        scaffoldKey.currentState.removeCurrentSnackBar();
+      }
+    });
   }
 
   @override

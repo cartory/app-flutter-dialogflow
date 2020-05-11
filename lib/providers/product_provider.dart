@@ -10,15 +10,15 @@ class ProductProvider {
   static ProductProvider _instance = ProductProvider();
   static ProductProvider get instance => _instance;
 
-  DatabaseReference _database;
   StorageReference _storage;
+  DatabaseReference _database;
 
   DatabaseReference get reference => _database;
   Query get promoQuery => _database.orderByChild('promo').equalTo(true);
 
   ProductProvider() {
-    _database = FirebaseDatabase.instance.reference().child('products');
     _storage = FirebaseStorage.instance.ref().child('products');
+    _database = FirebaseDatabase.instance.reference().child('products');
   }
 
   create(Product product, File image) async {
