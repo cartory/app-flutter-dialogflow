@@ -52,10 +52,7 @@ class DialogProvider {
 
   _processResult(GoogleCloudDialogflowV2QueryResult res) {
     VoiceReader.instance.speak(res.fulfillmentText);
-    if (res.action == 'promo') {
-      _dialogController.sink.add(res);
-    }
-    if (res.action == 'list') {
+    if (res.action != null) {
       _dialogController.sink.add(res);
     }
   }

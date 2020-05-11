@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Speech to Text App'),
+        title: Text('DialogFlow App'),
         centerTitle: true,
       ),
       body: _currentWidget(_selectedIndex),
@@ -76,12 +76,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget _currentWidget(int index) {
-    if (index == 0) {
-      return ProductList.instance;
-    }
-    if (index == 2) {
-      return ProductListQuery.instance;
-    }
+    if (index == 0) return ProductList.instance;
+    if (index == 2) return ProductListQuery.instance;
     return Container();
   }
 
@@ -93,12 +89,8 @@ class _HomeState extends State<Home> {
   void addListeners() {
     DialogProvider.instance.dialogStream.listen((res) {
       setState(() {
-        if (res.action == 'promo') {
-          _selectedIndex = 2;
-        }
-        if (res.action == 'list') {
-          _selectedIndex = 0;
-        }
+        if (res.action == 'list') _selectedIndex = 0;
+        if (res.action == 'promo') _selectedIndex = 2;
       });
     });
     SpeechRecognizer.instance.dataStream.listen((data) {
